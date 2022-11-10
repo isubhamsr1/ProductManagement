@@ -82,7 +82,7 @@ namespace ProductManagement.API.Repositories
         {
             try
             {
-                var products = _context.Products.ToList();
+                var products = _context.Products.Include(p => p.Category).ToList();
                 return products;
             }
             catch (Exception)
@@ -96,7 +96,7 @@ namespace ProductManagement.API.Repositories
         {
             try
             {
-                var product = _context.Products.Where(p => p.Id == id).ToList();
+                var product = _context.Products.Where(p => p.Id == id).Include(p=>p.Category).ToList();
                 return product;
             }
             catch (Exception)
