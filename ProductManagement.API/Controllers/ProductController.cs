@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProductManagement.API.Models;
 using ProductManagement.API.Repositories;
@@ -19,6 +20,7 @@ namespace ProductManagement.API.Controllers
         }
         // GET: api/<ProductController>
         [HttpGet]
+        [Authorize(Roles = "Admin, Editor")]
         public string Get()
         {
             try
@@ -58,6 +60,7 @@ namespace ProductManagement.API.Controllers
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, Editor")]
         public string Get(int id)
         {
             try
@@ -97,29 +100,41 @@ namespace ProductManagement.API.Controllers
 
         // POST api/<ProductController>
         [HttpPost]
+        [Authorize(Roles = "Admin, Editor")]
         public string Post([FromBody] Product value)
         {
             try
             {
                 DateTime bidDate = value.BidEndDate;
                 var checkDate = _productRepository.CheckDate(bidDate);
-
-                if (checkDate)
+                if (value != null && value.Name != null && value.BidEndDate != DateTime.MinValue && value.ShortDescription != null && value.Description != null && value.Price != null)
                 {
-                    var product = _productRepository.AddProduct(value);
-                    if (product)
+                    if (checkDate)
                     {
-                        response.Add("error", false);
-                        response.Add("message", "Product Added");
+                        var product = _productRepository.AddProduct(value);
+                        if (product)
+                        {
+                            response.Add("error", false);
+                            response.Add("message", "Product Added");
 
-                        string jsonResponse = JsonConvert.SerializeObject(response);
+                            string jsonResponse = JsonConvert.SerializeObject(response);
 
-                        return jsonResponse;
+                            return jsonResponse;
+                        }
+                        else
+                        {
+                            response.Add("error", true);
+                            response.Add("message", "Some Thing Went Wrong");
+
+                            string jsonResponse = JsonConvert.SerializeObject(response);
+
+                            return jsonResponse;
+                        }
                     }
                     else
                     {
                         response.Add("error", true);
-                        response.Add("message", "Some Thing Went Wrong");
+                        response.Add("message", "Bid Date Mustbe in Future");
 
                         string jsonResponse = JsonConvert.SerializeObject(response);
 
@@ -129,14 +144,14 @@ namespace ProductManagement.API.Controllers
                 else
                 {
                     response.Add("error", true);
-                    response.Add("message", "Bid Date Mustbe in Future");
+                    response.Add("message", "All Fields are Required");
 
                     string jsonResponse = JsonConvert.SerializeObject(response);
 
                     return jsonResponse;
                 }
 
-                
+
             }
             catch (Exception ex)
             {
@@ -152,6 +167,7 @@ namespace ProductManagement.API.Controllers
 
         // PUT api/<ProductController>/5
         [HttpPut]
+        [Authorize(Roles = "Admin, Editor")]
         public string Put([FromBody] Product value)
         {
             try
@@ -207,6 +223,7 @@ namespace ProductManagement.API.Controllers
 
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public string Delete(int id)
         {
             try

@@ -17,6 +17,10 @@ builder.Services.AddDbContext<AppicationDbContext>(options => options.UseSqlServ
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IGenarateToken, GenarateToken>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
+
 
 builder.Services.AddCors(options =>
 {
@@ -40,8 +44,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuer = false,
         ValidateAudience = false,
 
-        //ValidAudience = builder.Configuration["Jwt:Audience"],
-        //ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });

@@ -12,8 +12,8 @@ using ProductManagement.API.Data;
 namespace ProductManagement.API.Migrations
 {
     [DbContext(typeof(AppicationDbContext))]
-    [Migration("20221108150731_initial-migration")]
-    partial class initialmigration
+    [Migration("20221213060459_Initialmigration")]
+    partial class Initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

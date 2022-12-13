@@ -2,6 +2,8 @@
 using ProductManagement.API.Repositories;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,6 +24,7 @@ namespace ProductManagement.API.Controllers
 
         // GET: api/<CategoryController>
         [HttpGet]
+        [Authorize(Roles = "Admin, Editor")]
         public string Get()
         {
             try

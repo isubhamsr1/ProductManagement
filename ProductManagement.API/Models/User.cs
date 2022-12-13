@@ -1,4 +1,6 @@
-﻿namespace ProductManagement.API.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ProductManagement.API.Models
 {
     public class User
     {
@@ -6,5 +8,6 @@
         public string UserName { get; set; }
         public string Password { get; set; }
         public bool IsAdmin { get; set; } = false;
+        //public List<string> Roles { get; set; } = new List<string>();
     }
 }
