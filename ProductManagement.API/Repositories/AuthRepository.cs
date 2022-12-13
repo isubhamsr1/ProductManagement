@@ -6,9 +6,11 @@ namespace ProductManagement.API.Repositories
     public class AuthRepository : IAuthRepository
     {
         private readonly AppicationDbContext _context;
-        public AuthRepository(AppicationDbContext context)
+        private readonly IGenarateToken _genarateToken;
+        public AuthRepository(AppicationDbContext context, IGenarateToken genarateToken)
         {
             _context = context;
+            _genarateToken = genarateToken;
         }
         public bool Login(User user)
         {

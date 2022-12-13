@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using ProductManagement.API.Repositories;
 using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore;
+using ProductManagement.API.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,11 +18,13 @@ namespace ProductManagement.API.Controllers
         private IDictionary<string, dynamic> response = new Dictionary<string, dynamic>();
         private readonly IAuthRepository _authRepository;
         private readonly IGenarateToken _genarateToken;
+        private readonly AppicationDbContext _context;
 
-        public AuthController(IAuthRepository authRepository, IGenarateToken genarateToken)
+        public AuthController(IAuthRepository authRepository, IGenarateToken genarateToken, AppicationDbContext context)
         {
             _authRepository = authRepository;
             _genarateToken = genarateToken;
+            _context = context;
         }
 
         // GET: api/<AuthController>
@@ -45,10 +49,13 @@ namespace ProductManagement.API.Controllers
                 var auth = _authRepository.Login(user);
                 if (auth)
                 {
-                    string token = await _genarateToken.GetTokenAsync(user);
+                    var userDetails = _context.Users.Where(u => u.UserName == user.UserName && u.Password == user.Password).FirstOrDefault();
+                    string token = await _genarateToken.GetTokenAsync(userDetails);
                     response.Add("error", false);
                     response.Add("message", "Sign ip Successfull");
+                    //response.Add("token", token);
                     response.Add("token", token);
+
 
                     string jsonResponse = JsonConvert.SerializeObject(response);
 
