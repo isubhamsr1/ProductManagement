@@ -29,10 +29,12 @@ namespace ProductManagement.API.Repositories
                 if (user.IsAdmin)
                 {
                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                    claims.Add(new Claim("Role", "Admin"));
                 }
                 else
                 {
                     claims.Add(new Claim(ClaimTypes.Role, "Editor"));
+                    claims.Add(new Claim("Role", "Editor"));
                 }
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
