@@ -1,0 +1,84 @@
+﻿pipeline {
+    agent any
+    environment {
+        dotnet = 'C:\\Program Files\\dotnet\\dotnet.exe'
+    }
+    stages {
+        stage('Checkout Stage') {
+            steps {
+                git credentialsId: 'githubidpassword', url: 'https://github.com/isubhamsr1/ProductManagement.git', branch: 'master'
+            }
+        }
+        stage('Build Stage') {
+            steps {
+                bat 'dotnet build C:\\Users\\2134129\\"OneDrive - Cognizant"\\Desktop\\C#\\ProductManagement\\ProductManagement.sln --configuration Release'
+            }
+        }
+        stage('Test Stage') {
+            steps {
+                bat 'dotnet test C:\\Users\\2134129\\"OneDrive - Cognizant"\\Desktop\\C#\\ProductManagement\\ProductManagement.Test\\ProductManagement.Test.csproj'
+            }
+        }
+        stage("Release Stage") {
+            steps {
+                bat 'dotnet build C:\\Users\\2134129\\"OneDrive - Cognizant"\\Desktop\\C#\\ProductManagement\\ProductManagement.sln /p:PublishProfile="C:\\Users\\2134129\\OneDrive - Cognizant\\Desktop\\C#\\ProductManagement\\ProductManagement.API\\Properties\\PublishProfiles\\FolderProfile.pubxml" /p:Platform="Any CPU" /p:DeployOnBuild=true /m'
+            }
+        }
+        stage('Publish'){
+     steps{
+       bat 'dotnet publish C:\\Users\\2134129\\"OneDrive - Cognizant"\\Desktop\\C#\\ProductManagement\\ProductManagement.API\\ProductManagement.API.csproj'
+     }
+}
+        // stage('Deploy Stage') {
+        //     steps {
+        //         //Deploy application on IIS
+        //         bat 'net stop "w3svc"'
+        //         bat '"C:\\Program Files (x86)\\IIS\\Microsoft Web Deploy V3\\msdeploy.exe" -verb:sync -source:package="%WORKSPACE%\\JenkinsWebApplicationDemo\\bin\\Debug\\net6.0\\JenkinsWebApplicationDemo.zip" -dest:auto -setParam:"IIS Web Application Name"="Demo.Web" -skip:objectName=filePath,absolutePath=".\\\\PackagDemoeTmp\\\\Web.config$" -enableRule:DoNotDelete -allowUntrusted=true'
+        //         bat 'net start "w3svc"'
+        //     }
+        // }
+    }
+}
+
+pipeline {
+    agent any
+    environment {
+        dotnet = 'C:\\Program Files\\dotnet\\dotnet.exe'
+    }
+    stages {
+        stage('Checkout Stage') {
+            steps {
+                git credentialsId: 'githubidpassword', url: 'https://github.com/isubhamsr1/ProductManagement.git', branch: 'master'
+            }
+        }
+        stage('Build Stage') {
+            steps {
+          bat "\"${tool 'MSBuild'}\" C:\\Users\\2134129\\'OneDrive - Cognizant'\\Desktop\\C#\\ProductManagement\\ProductManagement.sln --configuration Release"
+                
+            }
+        }
+        stage('Test Stage') {
+            steps {
+                bat 'dotnet test C:\\Users\\2134129\\"OneDrive - Cognizant"\\Desktop\\C#\\ProductManagement\\ProductManagement.Test\\ProductManagement.Test.csproj'
+            }
+        }
+        stage("Release Stage") {
+            steps {
+                bat 'dotnet build C:\\Users\\2134129\\"OneDrive - Cognizant"\\Desktop\\C#\\ProductManagement\\ProductManagement.sln /p:PublishProfile="C:\\Users\\2134129\\OneDrive - Cognizant\\Desktop\\C#\\ProductManagement\\ProductManagement.API\\Properties\\PublishProfiles\\FolderProfile.pubxml" /p:Platform="Any CPU" /p:DeployOnBuild=true /m'
+            }
+        }
+        stage('Publish'){
+     steps{
+       bat 'dotnet publish C:\\Users\\2134129\\"OneDrive - Cognizant"\\Desktop\\C#\\ProductManagement\\ProductManagement.API\\ProductManagement.API.csproj'
+     }
+}
+        // stage('Deploy Stage') {
+        //     steps {
+        //         //Deploy application on IIS
+        //         bat 'net stop "w3svc"'
+        //         bat '"C:\\Program Files (x86)\\IIS\\Microsoft Web Deploy V3\\msdeploy.exe" -verb:sync -source:package="%WORKSPACE%\\JenkinsWebApplicationDemo\\bin\\Debug\\net6.0\\JenkinsWebApplicationDemo.zip" -dest:auto -setParam:"IIS Web Application Name"="Demo.Web" -skip:objectName=filePath,absolutePath=".\\\\PackagDemoeTmp\\\\Web.config$" -enableRule:DoNotDelete -allowUntrusted=true'
+        //         bat 'net start "w3svc"'
+        //     }
+        // }
+    }
+}
